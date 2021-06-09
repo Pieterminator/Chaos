@@ -1,26 +1,34 @@
+globals [number-of-turtles]
 turtles-own [zcor]
 
 to setup
   clear-all
+  ifelse compare-trajectories
+  [ set number-of-turtles 2]
+  [ set number-of-turtles 1]
   crt number-of-turtles
-    [setxy init-x init-z
+    [setxy initial-x-value initial-z-value
      set shape "circle" set size 0.1 pd
-     set zcor init-y]
+     set zcor initial-y-value]
 
   ask turtles with [who > 0] ;; turtle 0 is exact!
-    [xyz<-- (x + difference)  y  z ]
+    [xyz<-- (x + intitial-difference-in-x-value)  y  z ]
   reset-ticks
 end
 
 to-report difference report
-  (random-float (-1 ^ random 2)) * 10 ^ ( 0 - initial-x-differences )
+  (random-float (-1 ^ random 2)) * 10 ^ ( 0 - intitial-difference-in-x-value )
 end
 
-to go
+to run-simulation
   ask turtles
    [xyz<-- x + (  sigma * (y - x)    ) / 100 ;; small step size: fine lines
            y + (  x * (rho - z) - y  ) / 100
            z + (  x * y - beta * z   ) / 100 ]
+  if slow-down-simulation
+  [
+    wait 0.01
+  ]
    tick
 end
 
@@ -38,11 +46,11 @@ end
 GRAPHICS-WINDOW
 209
 10
-707
-509
+701
+503
 -1
 -1
-70.0
+69.143
 1
 10
 1
@@ -63,130 +71,115 @@ ticks
 30.0
 
 SLIDER
-10
+714
 220
-182
+887
 253
-number-of-turtles
-number-of-turtles
-1
-10
-2.0
-1
-1
-NIL
-HORIZONTAL
-
-SLIDER
-10
-255
-182
-288
-initial-x-differences
-initial-x-differences
-3
-10
-3.0
+intitial-difference-in-x-value
+intitial-difference-in-x-value
+0.1
+5
+0.1
 0.1
 1
 NIL
 HORIZONTAL
 
 SLIDER
+714
 10
-10
-182
+886
 43
-init-x
-init-x
+initial-x-value
+initial-x-value
 0
 10
-0.5
+1.1
 0.1
 1
 NIL
 HORIZONTAL
 
 SLIDER
-10
+714
 45
-182
+886
 78
-init-y
-init-y
+initial-y-value
+initial-y-value
 0
 20
-0.5
+2.9
 0.1
 1
 NIL
 HORIZONTAL
 
 SLIDER
-10
+714
 80
-182
+886
 113
-init-z
-init-z
+initial-z-value
+initial-z-value
 0
 20
-0.5
+15.2
 0.1
 1
 NIL
 HORIZONTAL
 
 SLIDER
-10
+714
 115
-182
+886
 148
 sigma
 sigma
 0
 20
-10.0
+5.61
 0.01
 1
 NIL
 HORIZONTAL
 
 SLIDER
-10
+714
 185
-182
+886
 218
 beta
 beta
 0
 5
-2.6667
+1.465
 0.0001
 1
 NIL
 HORIZONTAL
 
 SLIDER
-10
+714
 150
-182
+886
 183
 rho
 rho
 0
-100
-28.0
+350
+29.0
 0.1
 1
 NIL
 HORIZONTAL
 
 BUTTON
+23
 10
-290
-95
-323
+196
+43
 NIL
 setup
 NIL
@@ -200,21 +193,43 @@ NIL
 1
 
 BUTTON
-97
-290
-182
-323
-NIL
-go
+23
+45
+196
+78
+run simulation
+run-simulation
 T
 1
 T
 OBSERVER
 NIL
-G
+R
 NIL
 NIL
 1
+
+SWITCH
+23
+115
+197
+148
+compare-trajectories
+compare-trajectories
+0
+1
+-1000
+
+SWITCH
+23
+80
+196
+113
+slow-down-simulation
+slow-down-simulation
+0
+1
+-1000
 
 @#$#@#$#@
 ## WHAT IS IT?
